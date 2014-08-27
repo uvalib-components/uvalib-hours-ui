@@ -1,19 +1,21 @@
 {
-  "name": "seed-element",
+  "name": "uvalib-hours-ui",
   "version": "0.0.0",
   "authors": [
-    "Anonymous <anonymous@example.com>"
+    "Doug Chestnut <dougchestnut@gmail.com>"
   ],
-  "description": "Element providing solution to no problem in particular.",
+  "description": "Element providing a widget for displaying UVa Library hours",
   "keywords": "seed, polymer, web-components",
-  "main": "seed-element.html",
+  "main": "uvalib-hours-ui.html",
   "license": "MIT",
-  "homepage": "https://github.com/<USERNAME>/seed-element/",
+  "homepage": "https://github.com/uvalib-components/uvalib-hours-ui/",
   "ignore": [
     "**/.*"
   ],
   "dependencies": {
     "polymer": "Polymer/polymer#~0.3.4",
-    "polymer-test-tools": "Polymer/polymer-test-tools#~0.3.3"
+    "polymer-test-tools": "Polymer/polymer-test-tools#~0.3.3",
+    "core-animated-pages": "Polymer/core-animated-pages",
+    "uvalib-hours", "uvalib-components/uvalib-hours"
   }
 }

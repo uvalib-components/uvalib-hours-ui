@@ -8,3 +8,18 @@ polyfill-next-selector { content: ':host > h2'; }
 ::content h2 {
   color: blue;
 }
+
+    core-animated-pages {
+      position: absolute;
+      top: 50px;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      font-size: 72px;
+      overflow: hidden;
+    }
+
+    section > div {
+      height: 100%;
+      color: white;
+    }
