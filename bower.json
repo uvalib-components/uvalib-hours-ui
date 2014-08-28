@@ -16,6 +16,8 @@
     "polymer": "Polymer/polymer#~0.3.4",
     "polymer-test-tools": "Polymer/polymer-test-tools#~0.3.3",
     "core-animated-pages": "Polymer/core-animated-pages",
-    "uvalib-hours", "uvalib-components/uvalib-hours"
+    "core-icons": "Polymer/core-icons",
+    "paper-icon-button": "Polymer/paper-icon-button",
+    "uvalib-hours": "uvalib-components/uvalib-hours"
   }
 }

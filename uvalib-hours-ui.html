@@ -1,6 +1,8 @@
 <link rel="import" href="../polymer/polymer.html">
 <link rel="import" href="../core-animated-pages/core-animated-pages.html">
 <link rel="import" href="../core-animated-pages/transitions/slide-from-right.html">
+<link rel="import" href="../core-icons/core-icons.html">
+<link rel="import" href="../paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../uvalib-hours/uvalib-hours.html">
 
 <!--
@@ -16,11 +18,38 @@ Element providing a styled hours widget for the Library.
 @homepage http://uvalib-components.github.io/uvalib-hours-ui
 -->
 <polymer-element name="uvalib-hours-ui" extends="uvalib-hours" attributes="">
+  <template>
+    <link rel="stylesheet" href="uvalib-hours-ui.css" />
+    <template repeat="{{lib in listing}}">
+      <div id="{{lib.id}}" layout horizontal center center-justified>
+        <paper-icon-button icon="arrow-back"></paper-icon-button>
+        <core-animated-pages transitions="slide-from-right" flex>
+          <template id="{{lib.id}}cals" repeat="{{event in lib.cal.events}}">
+          <section>
+            <div style="color:black" class="card" vertical center center-justified layout>bar</div>
+          </section>
+          </template>
+        </core-animated-pages>
+        <paper-icon-button icon="arrow-forward"></paper-icon-button>
+      </div>
+    </template>
+  </template>
 
   <script>
 
     Polymer('uvalib-hours-ui', {
-      
+      dayCount: 5,
+//      listingChanged: function(){
+//        var foo="bar";
+//      },
+      ready: function(){
+        this.addEventListener('calendar-update',function(e){
+//          var foo = "bar";
+//          this.getElementById(id+'cals');
+          var template = this.shadowRoots['uvalib-hours-ui'].querySelector('#'+e.detail.id+'cals');
+          template.iterator_.updateIteratedValue();
+        }.bind(this) );
+      }
     });
 
   </script>

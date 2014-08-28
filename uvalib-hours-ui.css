@@ -10,13 +10,15 @@ polyfill-next-selector { content: ':host > h2'; }
 }
 
     core-animated-pages {
-      position: absolute;
+      /*position: absolute;
       top: 50px;
       right: 0;
       bottom: 0;
+      height: 100px;
       left: 0;
       font-size: 72px;
       overflow: hidden;
+      */
     }
 
     section > div {
