@@ -17,20 +17,30 @@ Element providing a styled hours widget for the Library.
 @status alpha
 @homepage http://uvalib-components.github.io/uvalib-hours-ui
 -->
-<polymer-element name="uvalib-hours-ui" extends="uvalib-hours" attributes="">
+<polymer-element name="uvalib-hours-ui" extends="uvalib-hours" attributes="startDateTime endDateTime">
   <template>
     <link rel="stylesheet" href="uvalib-hours-ui.css" />
     <template repeat="{{lib in listing}}">
       <div id="{{lib.id}}" layout horizontal center center-justified>
-        <paper-icon-button icon="arrow-back"></paper-icon-button>
-        <core-animated-pages transitions="slide-from-right" flex>
-          <template id="{{lib.id}}cals" repeat="{{event in lib.cal.events}}">
-          <section>
-            <div style="color:black" class="card" vertical center center-justified layout>bar</div>
+        <paper-icon-button icon="arrow-back" on-tap="{{previousSet}}"></paper-icon-button>
+        <core-animated-pages selected="{{selectedPage}}" valueattr="id" transitions="{{transitions}}" flex>
+          <section id="one" flex horizontal wrap around-justified layout>
+            <template repeat="{{event in one}}">
+              <div class="card" horizontal center center-justified layout style="border-top-left-radius: 4px; border-top-right-radius: 4px; border-bottom-right-radius: 4px; border-bottom-left-radius: 4px; -webkit-transform-origin: 0px 0px; color:black;">one <span>{{event.start.dateTime}}</span></div>
+            </template>
           </section>
-          </template>
+          <section id="two" flex horizontal wrap around-justified layout>
+            <template repeat="{{event in two}}">
+              <div class="card" horizontal center center-justified layout style="border-top-left-radius: 4px; border-top-right-radius: 4px; border-bottom-right-radius: 4px; border-bottom-left-radius: 4px; -webkit-transform-origin: 0px 0px; color:black;">two <span>{{event.start.dateTime}}</span></div>
+            </template>
+          </section>
+          <section id="three" flex horizontal wrap around-justified layout>
+            <template repeat="{{event in three}}">
+              <div class="card" horizontal center center-justified layout style="border-top-left-radius: 4px; border-top-right-radius: 4px; border-bottom-right-radius: 4px; border-bottom-left-radius: 4px; -webkit-transform-origin: 0px 0px; color:black;">three <span>{{event.start.dateTime}}</span></div>
+            </template>
+          </section>
         </core-animated-pages>
-        <paper-icon-button icon="arrow-forward"></paper-icon-button>
+        <paper-icon-button icon="arrow-forward" on-tap="{{nextSet}}"></paper-icon-button>
       </div>
     </template>
   </template>
@@ -38,18 +48,48 @@ Element providing a styled hours widget for the Library.
   <script>
 
     Polymer('uvalib-hours-ui', {
+
+      transitions: "slide-from-right",
+      selectedPage: "one",
+
+      startDateTime: null,
+      endDateTime: null,
+
+      subset: [],
+      one: [],
+      two: [],
+      three: [],
+
+      page: 0,
       dayCount: 5,
-//      listingChanged: function(){
-//        var foo="bar";
-//      },
+
       ready: function(){
         this.addEventListener('calendar-update',function(e){
 //          var foo = "bar";
 //          this.getElementById(id+'cals');
-          var template = this.shadowRoots['uvalib-hours-ui'].querySelector('#'+e.detail.id+'cals');
-          template.iterator_.updateIteratedValue();
+          var libid = e.detail.id;
+          this.updateCalendarSets(libid);
+//          var template = this.shadowRoots['uvalib-hours-ui'].querySelector('#'+e.detail.id+'cals');
+//          template.iterator_.updateIteratedValue();
         }.bind(this) );
+      },
+
+      nextSet: function(){ this.selectedPage = "next" },
+      previousSet: function(){ this.selectedPage = "previous" },
+
+      updateCalendarSets: function(libid) {
+        var calEl = this.shadowRoots['uvalib-hours']
+                        .querySelector('google-calendar-events#'+libid);
+        this.subset = calEl.getSubset(this.startDateTime, this.endDateTime);
+        this.one = this.subset.splice(this.page*this.dayCount, this.dayCount);
+        this.two = this.subset.splice((this.page+1)*this.dayCount, this.dayCount);
+        this.selectedPage = "one"
+      },
+
+      observe: {
+        //page: 
       }
+
     });
 
   </script>
