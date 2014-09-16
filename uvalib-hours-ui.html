@@ -21,7 +21,7 @@ Element providing a styled hours widget for the Library.
   <template>
     <link rel="stylesheet" href="uvalib-hours-ui.css" />
     <div layout horizontal>
-      <paper-icon-button icon="arrow-back" on-tap="{{previousSet}}"></paper-icon-button>
+      <paper-icon-button disabled?={{!selectedPage}} icon="arrow-back" on-tap="{{previousSet}}"></paper-icon-button>
       <core-animated-pages selected="{{selectedPage}}" valueattr="id" transitions="{{transitions}}" flex>
         <template repeat="{{set, index in sets}}">
           <section id="{{index}}" flex horizontal wrap around-justified layout>
@@ -34,7 +34,7 @@ Element providing a styled hours widget for the Library.
           </section>
         </template>
       </core-animated-pages>
-      <paper-icon-button icon="arrow-forward" on-tap="{{nextSet}}"></paper-icon-button>
+      <paper-icon-button disabled?={{atEnd}} icon="arrow-forward" on-tap="{{nextSet}}"></paper-icon-button>
     </div>
 
   </template>
@@ -46,14 +46,9 @@ Element providing a styled hours widget for the Library.
       transitions: "slide-from-right",
       selectedPage: 0,
 
-      subset: [],
-      one: [],
-      two: [],
-      three: [],
-
       sets: [],
-      page: 0,
       dayCount: 5,
+      atEnd:false,
 
       ready: function(){
         this.super();
@@ -63,9 +58,13 @@ Element providing a styled hours widget for the Library.
         }.bind(this) );
       },
  
-      nextSet: function(){ ++this.selectedPage},
-      previousSet: function(){--this.selectedPage},
+      nextSet: function(){ (!this.atEnd && ++this.selectedPage);},
+      previousSet: function(){this.selectedPage>0 && --this.selectedPage},
  
+      selectedPageChanged: function(){
+        if (this.selectedPage >= this.sets.length-2) this.atEnd = true;
+      },
+
       updateCalendarSets: function(libid) {
         for (var i=0; i<=this.calendar.length+this.dayCount; i=i+this.dayCount) {
           this.sets.push( this.calendar.slice(i, i+this.dayCount) );
