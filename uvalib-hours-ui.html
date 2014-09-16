@@ -20,7 +20,7 @@ Element providing a styled hours widget for the Library.
 <polymer-element name="uvalib-hours-ui" extends="uvalib-hours" attributes="startDateTime endDateTime">
   <template>
     <link rel="stylesheet" href="uvalib-hours-ui.css" />
-    <div layout horizontal center center-justified>
+    <div layout horizontal>
       <paper-icon-button icon="arrow-back" on-tap="{{previousSet}}"></paper-icon-button>
       <core-animated-pages selected="{{selectedPage}}" valueattr="id" transitions="{{transitions}}" flex>
         <template repeat="{{set, index in sets}}">
