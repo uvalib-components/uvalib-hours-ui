@@ -26,7 +26,10 @@ Element providing a styled hours widget for the Library.
         <template repeat="{{set, index in sets}}">
           <section id="{{index}}" flex horizontal wrap around-justified layout>
             <template repeat="{{event in set}}">
-              <div class="card" horizontal center center-justified layout style="border-top-left-radius: 4px; border-top-right-radius: 4px; border-bottom-right-radius: 4px; border-bottom-left-radius: 4px; -webkit-transform-origin: 0px 0px; color:black;"><div>{{event.id}}</div> <div>{{event.text}}</div></div>
+              <div class="card">
+                <div class="hours-date">{{event.label}}</div>
+                <div class="hours">{{event.text}}</div>
+              </div>
             </template>
           </section>
         </template>
@@ -67,7 +70,6 @@ Element providing a styled hours widget for the Library.
         for (var i=0; i<=this.calendar.length+this.dayCount; i=i+this.dayCount) {
           this.sets.push( this.calendar.slice(i, i+this.dayCount) );
         }
-        foo="bar"
       }
 
     });
