@@ -1,0 +1,65 @@
+<!doctype html>
+<!-- Copyright (c) 2014 Google Inc. All rights reserved. -->
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+  <title>google-calendar-events Demo</title>
+
+  <script src="../platform/platform.js"></script>
+  <link rel="import" href="../polymer/polymer.html">
+  <link rel="import" href="google-calendar-events.html">
+  <link rel="import" href="../core-list/core-list.html">
+
+  <style>
+    #calendarId {
+      vertical-align: top;
+      line-height: 20px;
+      width: 330px;
+    }
+  </style>
+
+</head>
+<body unresolved>
+  <polymer-element name="cal-test" noscript>
+    <template>
+        <google-calendar-events
+                id="cal1"
+                calendarId="virginia.edu_9lcbht26p1d5h1v3lvq1lssc38@group.calendar.google.com"
+                startTime="2014-08-04"
+                endTime="2014-08-11"
+                events={{events1}}>
+        </google-calendar-events>
+        <core-list id="list" data="{{events1}}" height="80">
+          <template>
+            <div class="item {{ {selected: selected} | tokenList }}">
+              <div class="event">
+                <span class="summary">1: {{summary}}</span>
+              </div>
+            </div>
+          </template>
+        </core-list>
+
+        <google-calendar-events
+                id="cal2"
+                calendarId="j88l2kup6kfsk8puv2fnmg74lo@group.calendar.google.com"
+                startTime="2014-08-04"
+                endTime="2014-08-11"
+                events={{events2}}>
+        </google-calendar-events>
+        <core-list id="list2" data="{{events2}}" height="80">
+          <template>
+            <div class="item {{ {selected: selected} | tokenList }}">
+              <div class="event">
+                <span class="summary">2: {{summary}}</span>
+              </div>
+            </div>
+          </template>
+        </core-list>
+
+    </template>
+  </polymer-element>
+
+  <cal-test></cal-test>
+
+</body>
+</html>

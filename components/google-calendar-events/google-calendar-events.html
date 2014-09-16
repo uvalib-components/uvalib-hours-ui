@@ -1,0 +1,164 @@
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../google-signin/google-signin.html">
+<link rel="import" href="../google-apis/google-client-api.html">
+
+<!--
+An element to retreive events in a given calendar.
+
+##### Example
+
+    <google-calendar-events
+        calendarId="YOUR_CAL_ID"
+        apiKey="YOUR_API_KEY"
+        startTime="2014-08-04"
+        endTime="2014-08-11">
+    </google-calendar-events>
+
+@element google-calendar-events
+@blurb An element to retreive events in a given calendar.
+@status alpha
+@url http://uvalib-components.github.io/google-calendar-events
+-->
+<polymer-element name="google-calendar-events"
+                 attributes="auto calendarId startTime endTime apiKey events summary updated singleEvents maxResults">
+  <template>
+      <google-api-loader id="calendar" name="calendar" version="v3"
+        on-google-api-load="{{apiReady}}">
+      </google-api-loader>
+      <core-localstorage name="cal-{{calendarId}}-{{startTime}}-{{endTime}}-{{singleEvents}}-{{maxResults}}" value="{{events}}"></core-localstorage>
+  </template>
+
+  <script>
+    (function() {
+
+      Polymer('google-calendar-events', {
+        /**
+         * The `calendar-response` event is fired when a response has been received from a query. 
+         *
+         * @event calendar-response 
+         */
+
+        /**
+         * Event from this calendar decide whether the status is free/busy.
+         * @attribute calendarId
+         * @type string
+         */
+        calendarId: null,
+        /**
+         * Whether to expand recurring events into instances and only return single one-off events and 
+         * instances of recurring events, but not the underlying recurring events themselves. Optional.
+         * @attribute singleEvents
+         * @type boolean
+         * @default false
+         */
+        singleEvents: false,
+        /**
+         * Maximum number of events returned on one result page. 
+         * The page size can never be larger than 2500 events. Optional.
+         * @attribute maxResults
+         * @type integer
+         * @default 250
+         */
+        maxResults: 250,
+        /**
+         * API key to use with Calendar API requests.
+         * @attribute apiKey
+         * @type string
+         */
+        apiKey: "AIzaSyCuvvkoUzxNgqlaQvCBU_69VbEMAB_sy4U",
+        /**
+         * start time of the events.
+         * @attribute startTime
+         * @type string (ISO-8601 formats or Date.parse format)
+         */
+        startTime: null,
+        /**
+         * end time of the events.
+         * @attribute endTime
+         * @type string (ISO-8601 formats or Date.parse format)
+         */
+        endTime: null,
+
+        isReady: false,
+        auto: false,
+
+        events: [],
+        summary: null,
+        updated: null,
+
+        ready: function(){
+          this.apiReady = this.debounce( function(){
+                            this.isReady = true;
+                            if (this.auto && this.events.length == 0) 
+                              this.fetch();
+                            else if (this.auto) {
+                              console.log('loaded cached calendar data');
+                              this.fire('calendar-response', {id:this.calendarId,
+                                              events:this.events, 
+                                              summary:this.summary, 
+                                              updated:this.updated});
+                            }
+
+                          }.bind(this) ,2000, true);
+        },
+
+        /**
+          * query the calendar for events
+          * @method fetch
+          */
+        fetch: function() {
+          if (!this.calendarId) {
+            console.log('CalendarId is required for this component');
+            return;
+          }
+          if (!this.isReady) {
+            setTimeout(this.fetch.bind(this), 50000);
+          }
+          else if (this.$.calendar.api) {
+            if (this.apiKey) {
+              gapi.client.setApiKey(this.apiKey);
+            }
+            var now = new Date();
+
+            //make dates as cachable as possible
+            var start = this.startTime;
+            var end = this.endTime;
+
+            var query = {
+              calendarId: this.calendarId,
+              timeMin: start,
+              timeMax: end,
+              orderBy: 'startTime',
+              singleEvents: this.singleEvents,
+              maxResults: this.maxResults
+            }
+            var request = this.$.calendar.api.events.list(query);
+            request.execute(function(resp) {
+              this.events = resp.items;
+              this.summary = resp.summary;
+              this.updated = resp.updated;
+              this.fire('calendar-response', {id:this.calendarId,
+                                              events:this.events, 
+                                              summary:this.summary, 
+                                              updated:this.updated});
+            }.bind(this));
+          }
+        },
+        debounce:function (func, wait, immediate) {
+          var timeout;
+          return function() {
+            var context = this, args = arguments;
+            clearTimeout(timeout);
+            if (immediate && !timeout) func.apply(context, args);
+            timeout = setTimeout(function() {
+              timeout = null;
+              if (!immediate) func.apply(context, args);
+            }, wait);
+          }.bind(this);
+        }
+
+      });
+    })();
+  </script>
+</polymer-element>
+

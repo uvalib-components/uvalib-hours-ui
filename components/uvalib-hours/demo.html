@@ -1,0 +1,31 @@
+<!doctype html>
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+  <title>uvalib-hours Demo</title>
+
+  <script src="../platform/platform.js"></script>
+  <link rel="import" href="uvalib-hours.html">
+  <link rel="import" href="../core-list/core-list.html">
+
+<style>
+
+</style>
+</head>
+<body unresolved>
+
+  <template is="auto-binding">
+
+    <uvalib-hours calendarId="7jh4d881ba11icf34ld2jbrd34@group.calendar.google.com" events="{{events}}" calendar="{{calendar}}"></uvalib-hours>
+    <div>{{events.length}} Events from Google Calendar</div>
+    <div>{{calendar.length}} Days in the created calendar</div>
+    <ul>
+    <template repeat="{{ calendar}}">
+      <li>{{ id }} -> {{ text }}</li>
+    </template>
+    </ul>
+
+  </template>
+
+</body>
+</html>

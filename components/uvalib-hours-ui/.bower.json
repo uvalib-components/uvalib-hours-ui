@@ -1,0 +1,32 @@
+{
+  "name": "uvalib-hours-ui",
+  "authors": [
+    "Doug Chestnut <dougchestnut@gmail.com>"
+  ],
+  "description": "Element providing a widget for displaying UVa Library hours",
+  "keywords": "seed, polymer, web-components",
+  "main": "uvalib-hours-ui.html",
+  "license": "MIT",
+  "homepage": "https://github.com/uvalib-components/uvalib-hours-ui/",
+  "ignore": [
+    "**/.*"
+  ],
+  "dependencies": {
+    "polymer": "Polymer/polymer#~0.3.4",
+    "polymer-test-tools": "Polymer/polymer-test-tools#~0.3.3",
+    "core-animated-pages": "Polymer/core-animated-pages",
+    "core-icons": "Polymer/core-icons",
+    "paper-icon-button": "Polymer/paper-icon-button",
+    "uvalib-hours": "uvalib-components/uvalib-hours"
+  },
+  "_release": "e1f5d5cc66",
+  "_resolution": {
+    "type": "branch",
+    "branch": "master",
+    "commit": "e1f5d5cc661deb723441d051f0b3c898e65765f7"
+  },
+  "_source": "git://github.com/uvalib-components/uvalib-hours-ui.git",
+  "_target": "master",
+  "_originalSource": "uvalib-components/uvalib-hours-ui",
+  "_direct": true
+}

@@ -1,0 +1,30 @@
+{
+  "name": "uvalib-events",
+  "authors": [
+    "Doug Chestnut <dougchestnut@gmail.com>"
+  ],
+  "description": "Hours of operation for the Library.",
+  "keywords": "seed, polymer, web-components",
+  "main": "uvalib-events.html",
+  "license": "MIT",
+  "homepage": "https://github.com/uvalib-components/uvalib-events/",
+  "ignore": [
+    "**/.*"
+  ],
+  "dependencies": {
+    "polymer": "Polymer/polymer#~0.3.4",
+    "polymer-test-tools": "Polymer/polymer-test-tools#~0.3.3",
+    "uvalib-libraries": "uvalib-components/uvalib-libraries",
+    "google-calendar-events": "uvalib-components/google-calendar-events",
+    "moment": "~2.8.1"
+  },
+  "_release": "dc3c743f23",
+  "_resolution": {
+    "type": "branch",
+    "branch": "master",
+    "commit": "dc3c743f2339fad9a4c1e069e04670631a0f6f4e"
+  },
+  "_source": "git://github.com/uvalib-components/uvalib-hours.git",
+  "_target": "*",
+  "_originalSource": "uvalib-components/uvalib-hours"
+}

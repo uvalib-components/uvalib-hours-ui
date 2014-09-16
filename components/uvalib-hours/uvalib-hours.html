@@ -1,0 +1,146 @@
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../uvalib-libraries/uvalib-libraries.html">
+<link rel="import" href="../google-calendar-events/google-calendar-events.html">
+
+<!--
+Element providing the hours of operation for the Library.
+
+##### Example
+
+    <uvalib-hours></uvalib-hours>
+
+@element uvalib-hours
+@blurb Element providing the hours of operation for the Library.
+@status alpha
+@homepage http://uvalib-components.github.io/uvalib-hours
+-->
+<polymer-element name="uvalib-hours" extends="google-calendar-events" attributes="calendar">
+  
+  <script src="../moment/moment.js"></script>
+  <script>
+
+    Polymer('uvalib-hours', {
+      
+      auto: true,
+      singleEvents: true,
+
+      calendar: [],
+      tz: null,
+
+      // Get a years worth of events to build a calendar from
+      startTime: moment().startOf('month').format(),
+      endTime: moment().add('years',1).endOf('month').format(),
+
+      ready: function(){
+        this.addEventListener('calendar-response', this.buildCalendar.bind(this) );
+        this.super();
+      },
+
+      buildCalendar: function(){
+        //figure out the timezone from the events
+        for (var i=0; i<this.events.length; i++) {
+          if(this.events[i].start.dateTime) {
+            this.tz = moment(this.events[i].start.dateTime).parseZone().zone();
+            break;
+          }
+        }
+
+        this.calendar = [];
+        var day = moment().zone(this.tz).subtract(1,'day'); // start with yesterday so we can build the proper text for today
+        var eventStack = this.events.slice(0); // clone the events into a stack for popping
+
+        // get rid of any days that have already passed except for yesterday
+        while ( eventStack.length > 0 &&
+                ( (eventStack[0].start.dateTime &&
+                   !moment(eventStack[0].start.dateTime).parseZone().isSame(day,'day') && 
+                   moment(eventStack[0].start.dateTime).parseZone().isBefore(day)) ||
+                  (eventStack[0].start.date &&
+                   !moment(eventStack[0].start.date).isSame(day,'day') &&
+                   moment(eventStack[0].start.date).isBefore(day)) ) ) {
+          eventStack.shift();
+        }
+
+        for (var i=0; i<365; i++) {  // make a calendar for a year out
+          var ev = {id:day.format('L'), events:[]};
+
+          ev.label = (day.isSame(moment().zone(this.tz),'day'))?
+                        "Today": day.format("dddd");
+          ev.label += " "+day.format("M/DD");
+
+          while (eventStack.length>0 && 
+                 ( (eventStack[0].start.dateTime && 
+                    moment(eventStack[0].start.dateTime).parseZone().isSame(day,'day')) || 
+                   (eventStack[0].start.date && 
+                    moment(eventStack[0].start.date).isSame(day,'day')) )
+                ) {
+            ev.events.push( eventStack.shift() );
+          }
+          this.calendar.push(ev);
+          day = day.add('d',1)
+        }
+
+        this.mkOpenText();
+        this.fire('calendar-updated');
+      },
+
+      mkOpenText: function(){
+        var tomorrow;
+        var yesterday = (this.calendar[0].events && 
+                         this.calendar[0].events.length > 0)? 
+                            this.getStartEnd( this.calendar[0].events[0] ): 
+                            null;
+        for (var i = 1; i < this.calendar.length; i++) {
+          var day = (tomorrow)? tomorrow:
+                ( this.calendar[i].events && this.calendar[i].events.length > 0 )?
+                    this.getStartEnd( this.calendar[i].events[0] ):
+                    null;
+          tomorrow = (i < this.calendar.length && 
+                      this.calendar[i+1] &&
+                      this.calendar[i+1].events && 
+                      this.calendar[i+1].events.length > 0)?
+                          this.getStartEnd( this.calendar[i+1].events[0] ):
+                          {startsday:false, endsday:false, allday:false};
+
+          this.calendar[i].text =
+            (!day || !day.start)?
+              "Closed":
+              (yesterday.endsday && day.allday  && tomorrow.startsday)?
+                "Open 24 Hours":
+                (yesterday.allday && day.startsday)?
+                  "Closing at "+day.end+" (End 24 Hours)":
+                  (yesterday.endsday && day.startsday)?
+                    "Closing at "+day.end:
+                    (day.endsday && tomorrow.allday)?
+                      "Open at "+day.start+" (Begin 24 Hours)":
+                      (day.endsday && tomorrow.startsday)?
+                        "Open at "+day.start:
+                        day.start+" - "+day.end; 
+
+          yesterday = (day)? day: {allday: false, startsday: false, endsday: false};
+        }
+        this.calendar.shift();
+      },
+
+      friendlyTime: function(time){
+        return (time == "12:00 AM")? "Midnight": 
+                                     (time == "12:00 PM")? "Noon": time;
+      },
+
+      getStartEnd: function(ev) {
+        var start = ev.start.dateTime? moment(ev.start.dateTime).parseZone().format('LT'):
+                                       moment(ev.start.date).format('LT');
+        var end = ev.end.dateTime? moment(ev.end.dateTime).parseZone().format('LT'):
+                                   moment(ev.end.date).format('LT');
+        return {start:this.friendlyTime(start), 
+                end:this.friendlyTime(end),
+                allday:(start=="12:00 AM" && end=="12:00 AM"),
+                open:(start!=null),
+                startsday:(start=="12:00 AM"),
+                endsday:(end=="12:00 AM")
+               };
+      }
+    });
+
+  </script>
+
+</polymer-element>

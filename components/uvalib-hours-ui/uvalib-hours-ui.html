@@ -1,0 +1,78 @@
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../core-animated-pages/core-animated-pages.html">
+<link rel="import" href="../core-animated-pages/transitions/slide-from-right.html">
+<link rel="import" href="../core-icons/core-icons.html">
+<link rel="import" href="../paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../uvalib-hours/uvalib-hours.html">
+
+<!--
+Element providing a styled hours widget for the Library.
+
+##### Example
+
+    <uvalib-hours-ui></uvalib-hours-ui>
+
+@element uvalib-hours-ui
+@blurb Element providing a styled hours widget for the Library.
+@status alpha
+@homepage http://uvalib-components.github.io/uvalib-hours-ui
+-->
+<polymer-element name="uvalib-hours-ui" extends="uvalib-hours" attributes="startDateTime endDateTime">
+  <template>
+    <link rel="stylesheet" href="uvalib-hours-ui.css" />
+    <div layout horizontal>
+      <paper-icon-button disabled?={{!selectedPage}} icon="arrow-back" on-tap="{{previousSet}}"></paper-icon-button>
+      <core-animated-pages selected="{{selectedPage}}" valueattr="id" transitions="{{transitions}}" flex>
+        <template repeat="{{set, index in sets}}">
+          <section id="{{index}}" flex horizontal wrap around-justified layout>
+            <template repeat="{{event in set}}">
+              <div class="card">
+                <div class="hours-date">{{event.label}}</div>
+                <div class="hours">{{event.text}}</div>
+              </div>
+            </template>
+          </section>
+        </template>
+      </core-animated-pages>
+      <paper-icon-button disabled?={{atEnd}} icon="arrow-forward" on-tap="{{nextSet}}"></paper-icon-button>
+    </div>
+
+  </template>
+
+  <script>
+
+    Polymer('uvalib-hours-ui', {
+
+      transitions: "slide-from-right",
+      selectedPage: 0,
+
+      sets: [],
+      dayCount: 5,
+      atEnd:false,
+
+      ready: function(){
+        this.super();
+        this.addEventListener('calendar-updated', function(e){
+          var libid = e.detail.id;
+          this.updateCalendarSets(libid);
+        }.bind(this) );
+      },
+ 
+      nextSet: function(){ (!this.atEnd && ++this.selectedPage);},
+      previousSet: function(){this.selectedPage>0 && --this.selectedPage},
+ 
+      selectedPageChanged: function(){
+        if (this.selectedPage >= this.sets.length-2) this.atEnd = true;
+      },
+
+      updateCalendarSets: function(libid) {
+        for (var i=0; i<=this.calendar.length+this.dayCount; i=i+this.dayCount) {
+          this.sets.push( this.calendar.slice(i, i+this.dayCount) );
+        }
+      }
+
+    });
+
+  </script>
+
+</polymer-element>

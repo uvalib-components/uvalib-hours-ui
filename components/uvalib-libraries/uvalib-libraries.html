@@ -1,0 +1,119 @@
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../polymer-jsonp/polymer-jsonp.html">
+<link rel="import" href="../core-localstorage/core-localstorage.html">
+
+<!--
+Element providing a listing of libraries at the University of Virginia.
+
+##### Example
+
+    <uvalib-libraries></uvalib-libraries>
+
+@element uvalib-libraries
+@blurb Element providing a listing of libraries at the University of Virginia.
+@status alpha
+@homepage http://uvalib-components.github.io/uvalib-libraries
+-->
+<polymer-element name="uvalib-libraries" attributes="library listing fields">
+
+  <template>
+    <core-localstorage id="localstore" name="uva-libraries-{{library}}" value="{{listing}}" on-core-localstorage-load="{{handleCachedResponse}}"></core-localstorage>
+    <polymer-jsonp id="jsonp" url="{{url}}" response="{{rawLibraries}}" on-polymer-response="{{handleResponse}}"></polymer-jsonp>
+  </template>
+
+  <script>
+
+    Polymer('uvalib-libraries', {
+      /**
+       * The optional `library` attribute sets a specific library
+       * 
+       * @attribute library
+       * @type string
+       * @default "" (get all libraries)
+       */
+      library: "",
+
+      /**
+       * The optional `fields` attribute sets a specific set of fields to return the the libraries
+       * 
+       * @attribute fields
+       * @type string (space seperated)
+       * @default ""
+       */
+      fields: "",
+      
+      /**
+       * `listing` is a attribute that returns a listing of libraries.
+       * 
+       * @attribute listing
+       * @type Array
+       * @default []
+       */
+      listing: [],
+
+      url: "http://www.library.virginia.edu/api/get_recent_posts?count=0&post_type=uvalib_library&callback=",
+
+
+      /**
+       * Fired when a the libraries info has been fetched.
+       *
+       * @event libraries-response
+       */
+      handleResponse: function(){
+        this.parseRawResponse();
+        this.fire('libraries-response', {});
+      },
+
+      handleCachedResponse: function(){
+        if (this.listing.length == 0) {
+          console.log("didn't match");
+          this.$.jsonp.go();  // Fetch the data
+        } else {
+          console.log("matched!")
+          this.fire('libraries-response', {});
+        }
+      },
+
+      ready: function(){
+        this.libraryChanged = function(){
+//          this.parseRawResponse();
+        }
+      },
+
+      parseRawResponse: function(){
+        var temp = [];
+        if (this.rawLibraries) {
+          for(var i=0; i<this.rawLibraries.posts.length; i++) {
+            var lib = this.rawLibraries.posts[i],
+                libs = (this.library)? this.library.split(' '): [];
+            if(!this.library || this.arrayContains(lib.slug, libs) ) {
+              temp.push({
+                id: lib.slug,
+                name: lib.title,
+                desc: lib.content,
+                thumb: lib.thumbnail,
+                type: lib.taxonomy_library_type[0].slug,
+                phone: lib.additional_info.phone_number,
+                email: lib.additional_info.email_address,
+                feed: lib.additional_info.feed_url,
+                donorTitle: lib.additional_info.donor_title,
+                donorDesc: lib.additional_info.donor_description,
+                hoursCalendar: lib.additional_info.hours_calendar_id,
+                eventsCalendar: lib.additional_info.events_calendar_id,
+                shortTitle: lib.additional_info.short_title
+              });
+            } 
+          }
+          this.listing = temp;
+        }
+      },
+
+      arrayContains: function(needle, arrhaystack){
+        return (arrhaystack.indexOf(needle) > -1);
+      }
+
+    });
+
+  </script>
+
+</polymer-element>

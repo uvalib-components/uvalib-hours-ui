@@ -1,0 +1,7 @@
+{
+  "name": "uvalib-hours-ui#gh-pages",
+  "private": true,
+  "dependencies": {
+    "uvalib-hours-ui": "uvalib-components/uvalib-hours-ui#master"
+  }
+}

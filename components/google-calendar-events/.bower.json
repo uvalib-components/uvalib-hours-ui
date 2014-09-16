@@ -1,0 +1,41 @@
+{
+  "name": "google-calendar-events",
+  "homepage": "http://uvalib-components.github.io/google-calendar-events",
+  "description": "Web component for working with Google Calendars",
+  "main": "google-calendar-events.html",
+  "authors": [
+    "Doug Chestnut"
+  ],
+  "license": "Apache2",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests",
+    "../"
+  ],
+  "keywords": [
+    "web-component",
+    "web-components",
+    "polymer",
+    "calendar",
+    "google"
+  ],
+  "dependencies": {
+    "polymer": "Polymer/polymer#~0.3.4",
+    "google-apis": "GoogleWebComponents/google-apis#~0.3.1",
+    "google-signin": "GoogleWebComponents/google-signin#~0.0.7",
+    "core-list": "Polymer/core-list#~0.3.4",
+    "core-localstorage": "Polymer/core-localstorage"
+  },
+  "_release": "711c0f4c0b",
+  "_resolution": {
+    "type": "branch",
+    "branch": "master",
+    "commit": "711c0f4c0bcca9aa8252ff842c6f945b8fcda353"
+  },
+  "_source": "git://github.com/uvalib-components/google-calendar-events.git",
+  "_target": "*",
+  "_originalSource": "uvalib-components/google-calendar-events"
+}
