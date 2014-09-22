@@ -41,3 +41,11 @@ polyfill-next-selector { content: ':host > h2'; }
   min-height: 42px;
   padding: 4%;
 }
+
+.today {
+  background: #ffb;
+  color: #332;
+  font-size: 1.6rem;
+  font-weight: bold;
+  padding: 8% 4%;
+}

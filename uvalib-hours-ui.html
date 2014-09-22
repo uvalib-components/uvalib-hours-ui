@@ -25,9 +25,9 @@ Element providing a styled hours widget for the Library.
       <core-animated-pages selected="{{selectedPage}}" valueattr="id" transitions="{{transitions}}" flex>
         <template repeat="{{set, index in sets}}">
           <section id="{{index}}" flex horizontal wrap around-justified layout>
-            <template repeat="{{event in set}}">
+            <template repeat="{{event, setindex in set}}">
               <div class="card">
-                <div class="hours-date">{{event.label}}</div>
+                <div class="hours-date{{(!index && !setindex)?' today':''}}">{{event.label}}</div>
                 <div class="hours">{{event.text}}</div>
               </div>
             </template>
